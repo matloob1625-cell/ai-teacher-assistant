@@ -1,0 +1,6 @@
+{
+  "name": "AI Teacher Assistant",
+  "description": "Comprehensive AI assistant for educators to create lesson plans, generate quizzes, grade assignments with rubrics, draft parent communications, differentiate learning content, and assist with classroom management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
