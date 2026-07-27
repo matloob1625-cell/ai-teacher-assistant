@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
@@ -11,11 +11,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const key = process.env.GEMINI_API_KEY;
     if (!key) return res.status(500).json({ error: "GEMINI_API_KEY missing" });
 
-    const genAI = new GoogleGenerativeAI(key);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const ai = new GoogleGenAI({ apiKey: key });
 
-    const result = await model.generateContent(String(message));
-    return res.status(200).json({ reply: result.response.text() });
+    const result = await ai.models.generateContent({
+      model: "gemini-1.5-flash",
+      contents: [{ role: "user", parts: [{ text: String(message) }] }],
+    });
+
+    const reply =
+      result?.candidates?.?.content?.parts?.map((p: any) => p.text).join("") || "";
+
+    return res.status(200).json({ reply });
   } catch (e: any) {
     return res.status(500).json({ error: e?.message || "Server error" });
   }
